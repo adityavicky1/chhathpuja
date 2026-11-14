@@ -14,7 +14,7 @@ st.set_page_config(
 if "items_df" not in st.session_state:
     initial_data = [
         {"Done": False, "Sl No": 1, "Date": date.today(), "Item": "Apple", "Qty": 5.0, "UOM": "kg", "Rate": 120.0},
-        {"Done": False, "Sl No": 2, "Date": date.today(), "Item": "Banana", "Qty": 2.0, "UOM": "dozen", "Rate": 50.0},
+        {"Done": False, "Sl No": 2, "Date": date.today(), "Item": "Banana", "Qty": 2.0, "UOM": "ghaud", "Rate": 750.0},
         {"Done": False, "Sl No": 3, "Date": date.today(), "Item": "Orange", "Qty": 30.0, "UOM": "pcs", "Rate": 10.0},
         {"Done": False, "Sl No": 4, "Date": date.today(), "Item": "Sweet Potato", "Qty": 4.0, "UOM": "kg", "Rate": 40.0},
         {"Done": False, "Sl No": 5, "Date": date.today(), "Item": "Radish", "Qty": 30.0, "UOM": "pcs", "Rate": 8.0},
@@ -63,7 +63,7 @@ with st.sidebar:
     if st.button("🔄 Reset to Default List", use_container_width=True):
         st.session_state.items_df = pd.DataFrame([
             {"Done": False, "Sl No": 1, "Date": date.today(), "Item": "Apple", "Qty": 5.0, "UOM": "kg", "Rate": 120.0},
-            {"Done": False, "Sl No": 2, "Date": date.today(), "Item": "Banana", "Qty": 2.0, "UOM": "dozen", "Rate": 50.0},
+            {"Done": False, "Sl No": 2, "Date": date.today(), "Item": "Banana", "Qty": 2.0, "UOM": "ghaud", "Rate": 750.0},
             {"Done": False, "Sl No": 3, "Date": date.today(), "Item": "Orange", "Qty": 30.0, "UOM": "pcs", "Rate": 10.0},
             {"Done": False, "Sl No": 4, "Date": date.today(), "Item": "Sweet Potato", "Qty": 4.0, "UOM": "kg", "Rate": 40.0},
             {"Done": False, "Sl No": 5, "Date": date.today(), "Item": "Radish", "Qty": 30.0, "UOM": "pcs", "Rate": 8.0},
