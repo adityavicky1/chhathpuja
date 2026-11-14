@@ -31,35 +31,6 @@ if "items_df" not in st.session_state:
 st.title("📋 Inventory & Todo Item Ledger")
 st.markdown("Manage your item list with auto-calculated amounts (`Qty × Rate`). Changes autosave immediately.")
 
-# Callback function for data editor to instantly autosave changes into session state
-def update_data_callback():
-    edited_changes = st.session_state.get("data_editor", None)
-    if edited_changes is not None:
-        # Handle added rows
-        if "added_rows" in edited_changes and edited_changes["added_rows"]:
-            for new_row in edited_changes["added_rows"]:
-                # Ensure default values if empty
-                if not new_row.get("Date"):
-                    new_row["Date"] = date.today()
-                if not new_row.get("Item"):
-                    new_row["Item"] = "New Item"
-                if new_row.get("Sl No") is None or pd.isna(new_row.get("Sl No")):
-                    max_sl = st.session_state.items_df["Sl No"].max() if len(st.session_state.items_df) > 0 else 0
-                    new_row["Sl No"] = int(max_sl) + 1
-                st.session_state.items_df = pd.concat([st.session_state.items_df, pd.DataFrame([new_row])], ignore_index=True)
-        
-        # Handle edited rows
-        if "edited_rows" in edited_changes and edited_changes["edited_rows"]:
-            for idx_str, changes in edited_changes["edited_rows"].items():
-                idx = int(idx_str)
-                for col, val in changes.items():
-                    if idx < len(st.session_state.items_df):
-                        st.session_state.items_df.at[idx, col] = val
-
-        # Handle deleted rows
-        if "deleted_rows" in edited_changes and edited_changes["deleted_rows"]:
-            st.session_state.items_df = st.session_state.items_df.drop(edited_changes["deleted_rows"]).reset_index(drop=True)
-
 # Sidebar Controls & Grand Total Display
 with st.sidebar:
     st.header("📊 Summary & Actions")
@@ -104,7 +75,7 @@ with st.sidebar:
     2. Deploy at [share.streamlit.io](https://share.streamlit.io)!
     """)
 
-# Main Layout: Editable Data Editor with Autosave Callback
+# Main Layout: Editable Data Editor storing back directly into session_state
 st.subheader("Item Entries Editor")
 st.markdown("Type directly into the table cells below. Changes are saved automatically upon clicking away or pressing Enter.")
 
@@ -120,9 +91,13 @@ edited_df = st.data_editor(
         "UOM": st.column_config.TextColumn("UOM (kg, pcs...)"),
         "Rate": st.column_config.NumberColumn("Rate (₹)", min_value=0.0, format="₹%.2f")
     },
-    key="data_editor",
-    on_change=update_data_callback
+    key="data_editor"
 )
+
+# Update session state with the editor result so edits persist immediately
+if not edited_df.equals(st.session_state.items_df):
+    st.session_state.items_df = edited_df.copy()
+    st.rerun()
 
 # Calculate Amount column dynamically for display table
 display_df = st.session_state.items_df.copy()
